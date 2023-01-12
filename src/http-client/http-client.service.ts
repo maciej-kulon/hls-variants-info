@@ -12,4 +12,8 @@ export class HttpClientService {
   public async get(url: string | URL) {
     return await this.httpClient.get(url);
   }
+
+  public async stream(url: string | URL) {
+    return await this.httpClient.stream(url);
+  }
 }

@@ -5,4 +5,4 @@ import { HttpClientService } from './http-client.service';
   providers: [HttpClientService],
   exports: [HttpClientService],
 })
-export class HttpClientModule { }
+export class HttpClientModule {}

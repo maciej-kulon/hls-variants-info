@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "docker": "docker compose build && docker compose up",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -23,10 +24,15 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@types/fluent-ffmpeg": "^2.1.20",
     "@types/got": "^9.6.12",
     "@types/hls-parser": "^0.8.3",
+    "fluent-ffmpeg": "^2.1.2",
     "got": "^11.8.5",
     "hls-parser": "^0.10.4",
+    "i": "^0.3.7",
+    "nestjs-rmq": "^2.8.0",
+    "npm": "^9.2.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
