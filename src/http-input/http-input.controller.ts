@@ -11,7 +11,7 @@ export class HttpInputController {
     @Headers('x-manifest-url') manifestUrl: string,
     @Res() res: Response,
   ): Promise<void> {
-    res.status(204).send();
+    res.status(202).send();
     await this.rmqService.notify<string>('manifest.url.received', manifestUrl);
   }
 }
