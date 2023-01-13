@@ -14,10 +14,11 @@ export class VariantsHandlerController {
   public async handleVariants(masterPlaylist: types.MasterPlaylist) {
     const variantsUrls =
       this.variantsHandlerService.createVariantsUrls(masterPlaylist);
+
     for (const variantUrl of variantsUrls) {
       const mediaPlaylist =
         await this.variantsHandlerService.createMediaPlaylist(variantUrl);
-      console.log(mediaPlaylist);
+
       await this.rmqService.notify<types.MediaPlaylist>(
         'media.playlist.created',
         mediaPlaylist,

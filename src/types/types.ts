@@ -1,4 +1,5 @@
 import { FfprobeData } from 'fluent-ffmpeg';
+import { types } from 'hls-parser';
 
 export type SegmentResult = {
   ffprobeData: FfprobeData;

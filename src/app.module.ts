@@ -4,12 +4,14 @@ import { ManifestUrlHandlerModule } from './manifest-url-handler/manifest-url-ha
 import { HttpInputController } from './http-input/http-input.controller';
 import { HttpInputModule } from './http-input/http-input.module';
 import { VariantsHandlerModule } from './variants-handler/variants-handler.module';
+import { SegmentsHandlerModule } from './segments-handler/segments-handler.module';
 
 @Module({
   imports: [
     HttpInputModule,
     ManifestUrlHandlerModule,
     VariantsHandlerModule,
+    SegmentsHandlerModule,
     RMQModule.forRoot({
       serviceName: 'hls-variants-info',
       exchangeName: 'hls-exchange',

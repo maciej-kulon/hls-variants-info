@@ -17,18 +17,22 @@ export class SegmentsHandlerController {
   public async handleSegments(mediaPlaylist: types.MediaPlaylist) {
     const mediaPlaylistResult: MediaPlaylistResult = {
       segments: [],
-      uri: '',
+      uri: mediaPlaylist.uri,
     };
 
-    const segmentsUrls = this.segmentsHandler.createSegmentsUrls(mediaPlaylist);
+    const segmentsUrls = await this.segmentsHandler.createSegmentsUrls(
+      mediaPlaylist,
+    );
 
     for (const segmentUrl of segmentsUrls) {
       const ffprobeData = await this.ffprobeService.getFprobeData(segmentUrl);
       mediaPlaylistResult.segments.push({
         ffprobeData,
-        uri: mediaPlaylist.uri,
+        uri: segmentUrl,
       });
     }
+
+    console.log(mediaPlaylistResult);
 
     await this.rmqService.notify<MediaPlaylistResult>(
       'ffprobe.completed',

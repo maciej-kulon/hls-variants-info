@@ -28,14 +28,13 @@ services:
       - MONGO_INITDB_DATABASE=hls-variants
       - MONGO_INITDB_USER=admin
       - MONGO_INITDB_PWD=admin
-  app:
-    container_name: hls-variants-info
-    build: .
-    ports:
-      - '3000:3000'
-    depends_on:
-      - rabbit
-      - mongo
-    networks:
-      - hls-variants-network
-    
+  # app:
+  #   container_name: hls-variants-info
+  #   build: .
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - rabbit
+  #     - mongo
+  #   networks:
+  #     - hls-variants-network
