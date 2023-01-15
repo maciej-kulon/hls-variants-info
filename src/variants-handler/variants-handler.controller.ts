@@ -1,28 +1,38 @@
 import { Controller } from '@nestjs/common';
-import { types } from 'hls-parser';
 import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
+import { Dao } from '../mongo/dao/dao.service';
+import { RMQTopic, VariantInfo, VariantDataTransport } from '../types/types';
 import { VariantsHandlerService } from './variants-handler.service';
 
 @Controller()
 export class VariantsHandlerController {
   public constructor(
     private readonly variantsHandlerService: VariantsHandlerService,
+    private readonly dao: Dao,
     private readonly rmqService: RMQService,
   ) {}
   @RMQTransform()
-  @RMQRoute('master.playlist.created')
-  public async handleVariants(masterPlaylist: types.MasterPlaylist) {
-    const variantsUrls =
-      this.variantsHandlerService.createVariantsUrls(masterPlaylist);
+  @RMQRoute(RMQTopic.HlsManifestParsed)
+  public async handleVariants(variantTransport: VariantDataTransport) {
+    const variantInfo = await this.variantsHandlerService.createVariantInfo(
+      variantTransport.variant,
+      variantTransport.masterPlaylistUri,
+    );
 
-    for (const variantUrl of variantsUrls) {
-      const mediaPlaylist =
-        await this.variantsHandlerService.createMediaPlaylist(variantUrl);
+    await this.dao.addVariant(variantInfo);
 
-      await this.rmqService.notify<types.MediaPlaylist>(
-        'media.playlist.created',
-        mediaPlaylist,
-      );
-    }
+    await this.rmqService.notify<VariantInfo>(
+      RMQTopic.VariantDataCreated,
+      variantInfo,
+    );
+  }
+
+  @RMQTransform()
+  @RMQRoute(RMQTopic.SegmentsFfprobeCompleted)
+  public async updateBitrateValues(variantUri: string) {
+    const segments = await this.dao.getAllVariantSegments(variantUri);
+    const bitrateValues =
+      await this.variantsHandlerService.aggregateBitrateValues(segments);
+    await this.dao.updateBitrateValues(variantUri, bitrateValues);
   }
 }

@@ -1,5 +1,6 @@
 networks:
   hls-variants-network:
+    driver: bridge
 
 services:
   rabbit:
@@ -12,6 +13,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: "rabbitmq"
       RABBITMQ_DEFAULT_PASS: "example"
+    volumes:
+      - './rabbitmq/rabbit_enabled_plugins:/etc/rabbitmq/enabled_plugins'
     networks:
       - hls-variants-network
   mongo:
@@ -25,16 +28,16 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root
-      - MONGO_INITDB_DATABASE=hls-variants
+      - MONGO_INITDB_DATABASE=hls-variants-info
       - MONGO_INITDB_USER=admin
       - MONGO_INITDB_PWD=admin
-  # app:
-  #   container_name: hls-variants-info
-  #   build: .
-  #   ports:
-  #     - '3000:3000'
-  #   depends_on:
-  #     - rabbit
-  #     - mongo
-  #   networks:
-  #     - hls-variants-network
+  app:
+    container_name: hls-variants-info
+    build: .
+    ports:
+      - '3000:3000'
+    depends_on:
+      - rabbit
+      - mongo
+    networks:
+      - hls-variants-network

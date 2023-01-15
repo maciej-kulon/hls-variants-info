@@ -13,14 +13,19 @@ export class ManifestUrlHandlerService {
   public async createMasterPlaylist(
     manifestUrl: string,
   ): Promise<types.MasterPlaylist> {
-    const { body: manifestContent } = await this.httpClient.get(manifestUrl);
-    const manifest = parse(manifestContent);
-    if (!(manifest instanceof types.MasterPlaylist)) {
-      throw new Error(
-        `Expected manifestUrl: ${manifestUrl} to be a master playlist.`,
-      );
+    try {
+      const { body: manifestContent } = await this.httpClient.get(manifestUrl);
+      const manifest = parse(manifestContent);
+      if (!(manifest instanceof types.MasterPlaylist)) {
+        throw new Error(
+          `Expected manifestUrl: ${manifestUrl} to be a master playlist.`,
+        );
+      }
+      manifest.uri = manifestUrl;
+      return manifest;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-    manifest.uri = manifestUrl;
-    return manifest;
   }
 }

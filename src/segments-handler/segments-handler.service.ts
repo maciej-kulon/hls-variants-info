@@ -1,19 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { types } from 'hls-parser';
-import { HttpClientService } from 'src/http-client/http-client.service';
-import { StringUtils } from 'src/utils/string-utils';
-import { Duplex } from 'stream';
-
+import { Dao } from '../mongo/dao/dao.service';
+import { FFprobeService } from '../ffprobe/ffprobe.service';
+import { SegmentInfo } from '../types/types';
 @Injectable()
 export class SegmentsHandlerService {
-  public constructor(private readonly httpClient: HttpClientService) {}
-  public createSegmentsUrls(mediaPlaylist: types.MediaPlaylist) {
-    const urls: string[] = [];
-    for (const segment of mediaPlaylist.segments) {
-      urls.push(
-        StringUtils.replaceAfterLastSlash(mediaPlaylist.uri, segment.uri),
-      );
-    }
-    return urls;
+  public constructor(
+    private readonly ffprobeService: FFprobeService,
+    private readonly dao: Dao,
+  ) {} //TODO: DAO, DAL, REPOSITORY
+
+  public async ffprobeSegment(segmentUrl: string): Promise<SegmentInfo> {
+    return new Promise((resolve, reject) => {
+      this.ffprobeService
+        .getFprobeData(segmentUrl)
+        .then((ffprobeData) => {
+          const bitrate = ffprobeData.format.bit_rate;
+          resolve({
+            bitrate,
+            uri: segmentUrl,
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          reject(err);
+        });
+    });
+  }
+
+  public async checkIfAllSegmentsHadBeenAdded(variantUri: string) {
+    const desiredSegmentsCount = await this.dao.getVariantDesiredSegmentsCount(
+      variantUri,
+    );
+    const currentSegmentsCount = (
+      await this.dao.getAllVariantSegments(variantUri)
+    ).length;
+    return desiredSegmentsCount === currentSegmentsCount;
   }
 }

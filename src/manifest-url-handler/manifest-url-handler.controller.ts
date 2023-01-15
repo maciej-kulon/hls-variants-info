@@ -1,13 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { types } from 'hls-parser';
+import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
 import {
-  ExtendedMessage,
-  RMQError,
-  RMQMessage,
-  RMQRoute,
-  RMQService,
-  RMQTransform,
-} from 'nestjs-rmq';
+  InputDataTransport,
+  RMQTopic,
+  VariantDataTransport,
+  VmafInputDataTransport,
+} from 'src/types/types';
+import { Dao } from '../mongo/dao/dao.service';
 import { ManifestUrlHandlerService } from './manifest-url-handler.service';
 
 @Controller()
@@ -15,18 +15,34 @@ export class ManifestUrlHandlerController {
   public constructor(
     private readonly manifestUrlHandler: ManifestUrlHandlerService,
     private readonly rmqService: RMQService,
+    private readonly dao: Dao,
   ) {}
 
   @RMQTransform()
-  @RMQRoute('manifest.url.received')
-  public async handleManifestUrl(manifestUrl: string) {
+  @RMQRoute(RMQTopic.HlsManifestUrlReceived)
+  public async handleManifestUrl(inputData: InputDataTransport) {
     const masterPlaylist = await this.manifestUrlHandler.createMasterPlaylist(
-      manifestUrl,
+      inputData.hlsManifestUrl,
     );
 
-    await this.rmqService.notify<types.MasterPlaylist>(
-      'master.playlist.created',
-      masterPlaylist,
-    );
+    await this.dao.saveMasterPlaylist(masterPlaylist.uri);
+
+    masterPlaylist.variants.forEach(async (variant) => {
+      await this.rmqService.notify<VariantDataTransport>(
+        RMQTopic.HlsManifestParsed,
+        { variant, masterPlaylistUri: masterPlaylist.uri },
+      );
+
+      if (inputData.originalVideoUrl) {
+        await this.rmqService.notify<VmafInputDataTransport>(
+          RMQTopic.VmafInputDataReceived,
+          {
+            hlsManifestUrl: inputData.hlsManifestUrl,
+            originalVideoUrl: inputData.originalVideoUrl,
+            vmafModel: inputData.vmafModel,
+          },
+        );
+      }
+    });
   }
 }
