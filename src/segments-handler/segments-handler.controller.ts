@@ -1,7 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
 import { StringUtils } from '../utils/string-utils';
-import { RMQTopic, SegmentDataTransport, VariantInfo } from '../types/types';
+import {
+  RMQTopic,
+  SegmentDataTransport,
+  SegmentInfo,
+  VariantInfo,
+} from '../types/types';
 import { SegmentsHandlerService } from './segments-handler.service';
 import { Dao } from '../mongo/dao/dao.service';
 import { last } from 'rxjs';
@@ -34,9 +39,20 @@ export class SegmentsHandlerController {
   @RMQTransform()
   @RMQRoute(RMQTopic.SegmentReadyToProbe)
   public async handleSegmentFfprobe(segmentTransport: SegmentDataTransport) {
-    const segmentInfo = await this.segmentsHandler.ffprobeSegment(
-      segmentTransport.segmentUrl,
-    );
+    let segmentInfo: SegmentInfo;
+    try {
+      segmentInfo = await this.segmentsHandler.ffprobeSegment(
+        segmentTransport.segmentUrl,
+      );
+    } catch (error) {
+      console.log(
+        `Failed to perform ffprobe on segment: ${segmentTransport.segmentUrl}`,
+      );
+      segmentInfo = {
+        uri: segmentTransport.segmentUrl,
+        bitrate: -1,
+      };
+    }
 
     await this.dao.addSegment(segmentTransport.mediaPlaylistUrl, segmentInfo);
 

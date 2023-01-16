@@ -31,9 +31,6 @@ export class VariantsHandlerService {
       playlist: mediaPlaylist,
       declaredMaxBitrate: variant.bandwidth || 0,
       declaredAvgBitrate: variant.averageBandwidth || 0,
-      measuredMaxBitrate: -1,
-      measuredMinBitrate: -1,
-      measuredAvgBitrate: -1,
       codecs: variant.codecs,
       masterPlaylistUri,
     };
@@ -49,6 +46,7 @@ export class VariantsHandlerService {
         let sum = 0;
 
         for (const segment of segments) {
+          if (segment.bitrate < 0) continue;
           if (segment.bitrate < minBitrate) minBitrate = segment.bitrate;
           if (segment.bitrate > maxBitrate) maxBitrate = segment.bitrate;
           sum += segment.bitrate;

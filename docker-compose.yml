@@ -33,6 +33,10 @@ services:
       - MONGO_INITDB_PWD=admin
   app:
     container_name: hls-variants-info
+    environment:
+      - MONGO_HOSTNAME=hls-variants-mongo
+      - RABBIT_HOSTNAME=hls-variants-broker
+      - RUNS_IN_CONTAINER=true
     build: .
     ports:
       - '3000:3000'

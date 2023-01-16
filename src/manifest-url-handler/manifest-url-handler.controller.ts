@@ -1,5 +1,4 @@
 import { Controller } from '@nestjs/common';
-import { types } from 'hls-parser';
 import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
 import {
   InputDataTransport,
@@ -7,6 +6,7 @@ import {
   VariantDataTransport,
   VmafInputDataTransport,
 } from 'src/types/types';
+import { StringUtils } from 'src/utils/string-utils';
 import { Dao } from '../mongo/dao/dao.service';
 import { ManifestUrlHandlerService } from './manifest-url-handler.service';
 
@@ -37,7 +37,10 @@ export class ManifestUrlHandlerController {
         await this.rmqService.notify<VmafInputDataTransport>(
           RMQTopic.VmafInputDataReceived,
           {
-            hlsManifestUrl: inputData.hlsManifestUrl,
+            variantUri: StringUtils.replaceAfterLastSlash(
+              inputData.hlsManifestUrl,
+              variant.uri,
+            ),
             originalVideoUrl: inputData.originalVideoUrl,
             vmafModel: inputData.vmafModel,
           },

@@ -34,6 +34,7 @@ export class SegmentsHandlerService {
     const currentSegmentsCount = (
       await this.dao.getAllVariantSegments(variantUri)
     ).length;
+    console.log(`${currentSegmentsCount}/${desiredSegmentsCount}`);
     return desiredSegmentsCount === currentSegmentsCount;
   }
 }

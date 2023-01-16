@@ -5,6 +5,7 @@ import { HttpInputModule } from './http-input/http-input.module';
 import { VariantsHandlerModule } from './variants-handler/variants-handler.module';
 import { SegmentsHandlerModule } from './segments-handler/segments-handler.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { VmafModule } from './vmafService/vmaf.module';
 
 @Module({
   imports: [
@@ -12,9 +13,9 @@ import { MongooseModule } from '@nestjs/mongoose';
     ManifestUrlHandlerModule,
     VariantsHandlerModule,
     SegmentsHandlerModule,
+    VmafModule,
     MongooseModule.forRoot(
-      // 'mongodb://root:root@hls-variants-mongo:27017/hls-variants-info?tls=false&ssl=false&authSource=admin',
-      'mongodb://root:root@0.0.0.0:27017/hls-variants-info?tls=false&ssl=false&authSource=admin',
+      `mongodb://root:root@${process.env.MONGO_HOSTNAME}:27017/hls-variants-info?tls=false&ssl=false&authSource=admin`,
     ),
     RMQModule.forRoot({
       serviceName: 'hls-variants-info',
@@ -24,8 +25,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         {
           login: 'rabbitmq',
           password: 'example',
-          // host: 'hls-variants-broker:5672',
-          host: '0.0.0.0:5672',
+          host: `${process.env.RABBIT_HOSTNAME}:5672`,
         },
       ],
       queueName: 'hls-variants-info-queue',

@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:18-alpine3.17 AS base
 
 WORKDIR /tmp/workdir
 
@@ -6,8 +6,7 @@ RUN  apk add --no-cache --update libgcc libstdc++ ca-certificates libcrypto1.1 l
 
 WORKDIR     /tmp/workdir
 
-ENV         FFMPEG_VERSION=5.0.2 \
-    AOM_VERSION=v1.0.0 \
+ENV AOM_VERSION=v1.0.0 \
     CHROMAPRINT_VERSION=1.5.0 \
     FDKAAC_VERSION=0.1.5 \
     FONTCONFIG_VERSION=2.12.4 \
@@ -39,7 +38,6 @@ ENV         FFMPEG_VERSION=5.0.2 \
     LIBSRT_VERSION=1.4.1 \
     LIBARIBB24_VERSION=1.0.3 \
     LIBPNG_VERSION=1.6.9 \
-    LIBVMAF_VERSION=2.1.1 \
     SRC=/usr/local
 
 ARG         FREETYPE_SHA256SUM="5eab795ebb23ac77001cfb68b7d4d50b5d6c7469247b0b01b2c953269f658dac freetype-2.10.4.tar.gz"
@@ -465,6 +463,7 @@ RUN \
         rm -rf ${DIR}
 
 ## libvmaf https://github.com/Netflix/vmaf
+ENV     LIBVMAF_VERSION=2.3.1
 RUN \
         DIR=/tmp/vmaf && \
         mkdir -p ${DIR} && \
@@ -480,6 +479,7 @@ RUN \
         rm -rf ${DIR};
 
 ## Download ffmpeg https://ffmpeg.org/
+ENV FFMPEG_VERSION=5.1.2
 RUN  \
         DIR=/tmp/ffmpeg && mkdir -p ${DIR} && cd ${DIR} && \
         curl -sLO https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 && \

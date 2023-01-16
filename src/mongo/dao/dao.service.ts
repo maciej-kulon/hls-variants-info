@@ -6,6 +6,7 @@ import {
   BitrateAggregation,
   SegmentInfo,
   VariantInfo,
+  VmafResult,
 } from '../../types/types';
 
 @Injectable()
@@ -41,11 +42,7 @@ export class Dao {
       codecs: variantInfo.codecs,
       declaredMaxBitrate: variantInfo.declaredMaxBitrate,
       declaredAvgBitrate: variantInfo.declaredAvgBitrate,
-      measuredMaxBitrate: undefined,
-      measuredMinBitrate: undefined,
-      measuredAvgBitrate: undefined,
       segmentsCount: variantInfo.playlist.segments.length,
-      vmafScore: undefined,
       segments: [],
     });
     await masterPlaylist.save();
@@ -79,6 +76,16 @@ export class Dao {
     variant.measuredMinBitrate = data.min;
     variant.measuredAvgBitrate = data.average;
     await masterPlaylist.save();
+  }
+
+  public async updateVmafResult(vmaf: VmafResult) {
+    await this.masterPlaylistModel.findOneAndUpdate(
+      {
+        'variants.uri': vmaf.identifier,
+      },
+      { $set: { 'variants.$.vmafScore': vmaf.log.pooled_metrics.vmaf } },
+      { new: true, upsert: true },
+    );
   }
 
   public async getAllVariantSegments(

@@ -1,11 +1,10 @@
 import * as mongoose from 'mongoose';
+import { VmafPooledMetrics } from 'src/types/types';
 import { SegmentInfoModel, SegmentInfoSchema } from '../segments/segment.model';
 
 export const VariantInfoSchema = new mongoose.Schema({
   uri: {
     type: String,
-    index: true,
-    unique: true,
   },
   codecs: String,
   declaredMaxBitrate: Number,
@@ -14,7 +13,7 @@ export const VariantInfoSchema = new mongoose.Schema({
   measuredMinBitrate: Number,
   measuredAvgBitrate: Number,
   segmentsCount: Number,
-  vmafScore: Number,
+  vmafScore: Object,
   segments: [SegmentInfoSchema],
 });
 
@@ -23,10 +22,10 @@ export interface VariantInfoModel {
   codecs: string;
   declaredMaxBitrate: number;
   declaredAvgBitrate: number;
-  measuredMaxBitrate: number;
-  measuredMinBitrate: number;
-  measuredAvgBitrate: number;
+  measuredMaxBitrate?: number;
+  measuredMinBitrate?: number;
+  measuredAvgBitrate?: number;
   segmentsCount: number;
-  vmafScore: number;
+  vmafScore?: VmafPooledMetrics;
   segments: SegmentInfoModel[];
 }

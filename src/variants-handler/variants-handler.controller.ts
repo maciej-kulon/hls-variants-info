@@ -1,7 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
 import { Dao } from '../mongo/dao/dao.service';
-import { RMQTopic, VariantInfo, VariantDataTransport } from '../types/types';
+import {
+  RMQTopic,
+  VariantInfo,
+  VariantDataTransport,
+  VmafResult,
+} from '../types/types';
 import { VariantsHandlerService } from './variants-handler.service';
 
 @Controller()
@@ -34,5 +39,11 @@ export class VariantsHandlerController {
     const bitrateValues =
       await this.variantsHandlerService.aggregateBitrateValues(segments);
     await this.dao.updateBitrateValues(variantUri, bitrateValues);
+  }
+
+  @RMQTransform()
+  @RMQRoute(RMQTopic.VariantVmafCompleted)
+  public async updateVmafResults(vmaf: VmafResult) {
+    await this.dao.updateVmafResult(vmaf);
   }
 }

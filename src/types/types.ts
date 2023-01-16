@@ -1,13 +1,16 @@
 import { types } from 'hls-parser';
+import { ReadStream } from 'fs';
+import { Duplex } from 'stream';
 
 export type VariantInfo = {
   playlist: types.MediaPlaylist;
   declaredMaxBitrate: number;
   declaredAvgBitrate: number;
-  measuredMaxBitrate: number;
-  measuredMinBitrate: number;
-  measuredAvgBitrate: number;
+  measuredMaxBitrate?: number;
+  measuredMinBitrate?: number;
+  measuredAvgBitrate?: number;
   codecs: string;
+  vmafScore?: VmafPooledMetrics;
   masterPlaylistUri: string;
 };
 
@@ -44,7 +47,7 @@ export type InputDataTransport = {
 };
 
 export type VmafInputDataTransport = {
-  hlsManifestUrl: string;
+  variantUri: string;
   originalVideoUrl: string;
   vmafModel?: string;
 };
@@ -57,5 +60,43 @@ export enum RMQTopic {
   SegmentsFfprobeCompleted = 'segments.ffprobe.finished',
   SegmentHasBeenAdded = 'segment.has.been.added',
   VmafInputDataReceived = 'vmaf.input.data.received',
+  VariantVmafCompleted = 'variant.vmaf.completed',
 }
-// ffmpeg -i https://flipfit-cdn.akamaized.net/flip_hls/630d4a50420d10001923979e-0633b7/audio-video/720/seg_0000.ts -i https://flipfit-cdn.akamaized.net/flip_hls/630d4a50420d10001923979e-0633b7/audio-video/720/seg_0000.ts -y -filter_complex "[0:v]scale=3840:2160[dist]; [1:v]scale=3840:2160[original]; [dist][original]libvmaf=model_path=/usr/local/share/model/vmaf_v0.6.1.json:log_fmt=json:log_path=/dev/stdout" -f null -
+
+export type VmafResult = {
+  identifier: string;
+  log: VmafLog;
+};
+
+export type VmafLog = {
+  frames: Frame[];
+  pooled_metrics: FramePooledMetrics;
+};
+
+export type Frame = {
+  frameNum: number;
+  metrics: FrameMetrics;
+};
+
+export type FrameMetrics = {
+  psnr_y?: number;
+  vmaf: number;
+};
+
+export type FramePooledMetrics = {
+  vmaf: VmafPooledMetrics;
+};
+
+export type VmafPooledMetrics = {
+  min: number;
+  max: number;
+  mean: number;
+  harmonic_mean: number;
+};
+
+export type OriginalVideoData = {
+  source: string | ReadStream | Duplex;
+  width: number;
+  height: number;
+  fps: string;
+};
