@@ -55,7 +55,7 @@ To perform VMAF assessment on your stream variants, send additional header: `x-o
 
 ## Browsing results
 
-All results are stored in local instance of MongoDB in docker. You can browse result using such software as [MongoDB Compass](https://www.mongodb.com/products/compass), [MongoDB Shell](https://www.mongodb.com/try/download/shell) or any other tool. Connect to the mongo DB using connection string:
+All results are stored in local instance of MongoDB in docker. You can browse result using such software as [MongoDB Compass](https://www.mongodb.com/products/compass), [MongoDB Shell](https://www.mongodb.com/try/download/shell) etc. Connect to the mongo DB using connection string:
 `mongodb://root:root@$0.0.0.0:27017/hls-variants-info?tls=false&ssl=false&authSource=admin`
 
 ## Example results
