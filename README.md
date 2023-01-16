@@ -34,7 +34,7 @@
 
 ## Usage
 
-If `npm run docker` command ended successfully tool is ready to be used.
+If `npm run docker` command completed successfully, tool is ready to be used.
 
 ## Segments bitrates measurement
 
@@ -78,12 +78,51 @@ Such as:
   <a href="https://github.com/Netflix/vmaf">VMAF - Video Multi-Method Assessment Fusion</a>
 </div>
 
+***
+
 <div>
   <img style="vertical-align:middle" src="https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo.png" width=100 alt="A grey image showing text 60 x 60">
   <a href="https://github.com/jrottenberg/ffmpeg">  jrottenberg - github user with awesome docker solutions</a>
 </div>
 
+***
+
 <div>
   <img style="vertical-align:middle" src="https://logo-download.com/wp-content/data/images/png/FFmpeg-logo.png" width=100 alt="A grey image showing text 60 x 60">
   <a href="https://ffmpeg.org">Ffmpeg - A complete, cross-platform solution to record, convert and stream audio and video.</a>
+</div>
+
+***
+
+<div>
+  <img style="vertical-align:middle" src="https://d33wubrfki0l68.cloudfront.net/e937e774cbbe23635999615ad5d7732decad182a/26072/logo-small.ede75a6b.svg" width=100 alt="A grey image showing text 60 x 60">
+  <a href="https://nestjs.com">A progressive Node.js framework for building efficient, reliable and scalable server-side applications.</a>
+</div>
+
+***
+
+<div>
+  <img style="vertical-align:middle" src="https://raw.githubusercontent.com/sindresorhus/got/HEAD/media/logo.svg" width=100 alt="A grey image showing text 60 x 60">
+  <a href="https://www.npmjs.com/package/got">Human-friendly and powerful HTTP request library for Node.js</a>
+</div>
+
+***
+
+<div>
+  <img style="vertical-align:middle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Npm-logo.svg/1080px-Npm-logo.svg.png?20140904162625" width=100 alt="A grey image showing text 60 x 60">
+  <a href="https://www.npmjs.com/package/hls-parser">hls-parser - Provides synchronous functions to read/write HLS playlists</a>
+</div>
+
+***
+
+<div>
+  <img style="vertical-align:middle" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Npm-logo.svg/1080px-Npm-logo.svg.png?20140904162625" width=100 alt="A grey image showing text 60 x 60">
+  <a href="https://www.npmjs.com/package/mongoose">Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment.</a>
+</div>
+
+***
+
+<div>
+  <img style="vertical-align:middle" src="https://github.com/AlariCode/nestjs-rmq/raw/master/img/new-logo.jpg" width=100 alt="A grey image showing text 60 x 60">
+  <a href="https://www.npmjs.com/package/nestjs-rmq">This library will take care of RPC requests and messaging between microservices.</a>
 </div>
