@@ -1,6 +1,5 @@
 import { types } from 'hls-parser';
-import { ReadStream } from 'fs';
-import { Duplex } from 'stream';
+import { Resolution } from 'src/mongo/media-playlist/variant-info.model';
 
 export type VariantInfo = {
   playlist: types.MediaPlaylist;
@@ -10,6 +9,7 @@ export type VariantInfo = {
   measuredMinBitrate?: number;
   measuredAvgBitrate?: number;
   codecs: string;
+  resolution: Resolution;
   vmafScore?: VmafPooledMetrics;
   masterPlaylistUri: string;
 };
@@ -44,12 +44,15 @@ export type InputDataTransport = {
   hlsManifestUrl: string;
   originalVideoUrl?: string;
   vmafModel?: string;
+  tag?: string;
+  enablePhoneModel?: boolean;
 };
 
 export type VmafInputDataTransport = {
   variantUri: string;
   originalVideoUrl: string;
   vmafModel?: string;
+  enablePhoneModel?: boolean;
 };
 
 export enum RMQTopic {
@@ -64,6 +67,8 @@ export enum RMQTopic {
 }
 
 export type VmafResult = {
+  originalVideoFile: string;
+  usedVmafModel: string;
   identifier: string;
   log: VmafLog;
 };
@@ -95,7 +100,7 @@ export type VmafPooledMetrics = {
 };
 
 export type OriginalVideoData = {
-  source: string | ReadStream | Duplex;
+  source: string;
   width: number;
   height: number;
   fps: string;

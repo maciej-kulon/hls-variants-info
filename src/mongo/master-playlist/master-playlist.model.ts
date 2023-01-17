@@ -10,10 +10,16 @@ export const MasterPlaylistSchema = new mongoose.Schema({
     index: true,
     unique: true,
   },
+  tag: String,
+  originalVideoFile: String,
+  vmafModelPath: String,
   variants: [VariantInfoSchema],
 });
 
 export interface MasterPlaylistModel {
   uri: string;
+  tag?: string;
+  originalVideoFile?: string;
+  vmafModelPath?: string;
   variants: VariantInfoModel[];
 }

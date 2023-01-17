@@ -26,12 +26,20 @@ export class VmafService {
       this.ffprobeService.getFPS(distortedVideoData),
     );
 
-    return await this.ffmpegService.vmaf(vmafInputData.variantUri, {
-      source: vmafInputData.originalVideoUrl,
-      width: this.ffprobeService.getWidth(originalVideoData),
-      height: this.ffprobeService.getHeight(originalVideoData),
-      fps: (distortedFps < originalFps ? distortedFps : originalFps).toString(),
-    });
+    return await this.ffmpegService.vmaf(
+      vmafInputData.variantUri,
+      {
+        source: vmafInputData.originalVideoUrl,
+        width: this.ffprobeService.getWidth(originalVideoData),
+        height: this.ffprobeService.getHeight(originalVideoData),
+        fps: (distortedFps < originalFps
+          ? distortedFps
+          : originalFps
+        ).toString(),
+      },
+      vmafInputData.vmafModel,
+      vmafInputData.enablePhoneModel,
+    );
   }
 
   public calculateFPS(frameRate: string) {

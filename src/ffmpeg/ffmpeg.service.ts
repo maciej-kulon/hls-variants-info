@@ -8,7 +8,8 @@ export class FFmpegService {
   public async vmaf(
     distorted: string,
     original: OriginalVideoData,
-    modelPath?: string,
+    modelPath = '/usr/local/share/model/vmaf_v0.6.1.json',
+    enablePhoneModel = false,
   ): Promise<VmafResult> {
     return new Promise((resolve, reject) => {
       try {
@@ -22,7 +23,12 @@ export class FFmpegService {
           (_) => {
             const data = fs.readFileSync(filePath).toString();
             fs.unlinkSync(filePath);
-            resolve({ identifier: distorted, log: JSON.parse(data) });
+            resolve({
+              identifier: distorted,
+              originalVideoFile: original.source,
+              log: JSON.parse(data),
+              usedVmafModel: modelPath,
+            });
           },
           reject,
         );
@@ -38,13 +44,9 @@ export class FFmpegService {
               original.height
             },framerate=${
               original.fps
-            }[original]; [dist][original]libvmaf=log_fmt=json:log_path=${filePath}${
-              process.env.RUNS_IN_CONTAINER
-                ? modelPath
-                  ? modelPath
-                  : ':model_path=/usr/local/share/model/vmaf_v0.6.1.json'
-                : ''
-            }`,
+            }[original]; [dist][original]libvmaf=log_fmt=json${
+              enablePhoneModel ? ':phone_model=1' : ''
+            }:log_path=${filePath}:model_path=${modelPath}`,
           )
           .format('null')
           .save('-');

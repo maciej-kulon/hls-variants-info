@@ -3,10 +3,14 @@ import { parse, types } from 'hls-parser';
 import { BitrateAggregation, SegmentInfo, VariantInfo } from '../types/types';
 import { HttpClientService } from '../http-client/http-client.service';
 import { StringUtils } from '../utils/string-utils';
+import { FFprobeService } from 'src/ffprobe/ffprobe.service';
 
 @Injectable()
 export class VariantsHandlerService {
-  public constructor(private readonly httpClient: HttpClientService) {}
+  public constructor(
+    private readonly httpClient: HttpClientService,
+    private readonly ffprobeService: FFprobeService,
+  ) {}
 
   public async createVariantInfo(
     variant: types.Variant,
@@ -21,10 +25,13 @@ export class VariantsHandlerService {
 
     const mediaPlaylist = parse(playlistContent);
 
+    const variantFfprobeData = await this.ffprobeService.getFprobeData(
+      variantUrl,
+    );
+
     if (!(mediaPlaylist instanceof types.MediaPlaylist)) {
       throw Error(`Expected variantUrl: ${variantUrl} to be a MediaPlaylist.`);
     }
-
     mediaPlaylist.uri = variantUrl;
 
     return {
@@ -32,6 +39,10 @@ export class VariantsHandlerService {
       declaredMaxBitrate: variant.bandwidth || 0,
       declaredAvgBitrate: variant.averageBandwidth || 0,
       codecs: variant.codecs,
+      resolution: {
+        width: this.ffprobeService.getWidth(variantFfprobeData),
+        height: this.ffprobeService.getHeight(variantFfprobeData),
+      },
       masterPlaylistUri,
     };
   }

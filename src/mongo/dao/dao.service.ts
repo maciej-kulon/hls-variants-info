@@ -4,6 +4,7 @@ import { Document, Model } from 'mongoose';
 import { MasterPlaylistModel } from '../master-playlist/master-playlist.model';
 import {
   BitrateAggregation,
+  InputDataTransport,
   SegmentInfo,
   VariantInfo,
   VmafResult,
@@ -15,17 +16,22 @@ export class Dao {
     @InjectModel('MasterPlaylist')
     private readonly masterPlaylistModel: Model<MasterPlaylistModel>,
   ) {}
-  public async saveMasterPlaylist(uri: string) {
+  public async saveMasterPlaylist(inputData: InputDataTransport) {
     try {
-      let masterPlaylist = await this.getMasterPlaylistByUri(uri);
+      let masterPlaylist = await this.getMasterPlaylistByUri(
+        inputData.hlsManifestUrl,
+      );
+
       if (!masterPlaylist) {
         masterPlaylist = new this.masterPlaylistModel({
-          uri,
+          uri: inputData.hlsManifestUrl,
+          tag: inputData.tag,
           variants: [],
         });
       } else {
         masterPlaylist.variants = [];
       }
+
       await masterPlaylist.save();
     } catch (error) {
       console.error(error);
@@ -40,6 +46,7 @@ export class Dao {
     masterPlaylist.variants.push({
       uri: variantInfo.playlist.uri,
       codecs: variantInfo.codecs,
+      resolution: variantInfo.resolution,
       declaredMaxBitrate: variantInfo.declaredMaxBitrate,
       declaredAvgBitrate: variantInfo.declaredAvgBitrate,
       segmentsCount: variantInfo.playlist.segments.length,
@@ -83,7 +90,13 @@ export class Dao {
       {
         'variants.uri': vmaf.identifier,
       },
-      { $set: { 'variants.$.vmafScore': vmaf.log.pooled_metrics.vmaf } },
+      {
+        $set: {
+          'variants.$.vmafScore': vmaf.log.pooled_metrics.vmaf,
+          originalVideoFile: vmaf.originalVideoFile,
+          vmafModelPath: vmaf.usedVmafModel,
+        },
+      },
       { new: true, upsert: true },
     );
   }

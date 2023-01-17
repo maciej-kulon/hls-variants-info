@@ -25,7 +25,7 @@ export class ManifestUrlHandlerController {
       inputData.hlsManifestUrl,
     );
 
-    await this.dao.saveMasterPlaylist(masterPlaylist.uri);
+    await this.dao.saveMasterPlaylist(inputData);
 
     masterPlaylist.variants.forEach(async (variant) => {
       await this.rmqService.notify<VariantDataTransport>(
@@ -43,6 +43,7 @@ export class ManifestUrlHandlerController {
             ),
             originalVideoUrl: inputData.originalVideoUrl,
             vmafModel: inputData.vmafModel,
+            enablePhoneModel: inputData.enablePhoneModel,
           },
         );
       }

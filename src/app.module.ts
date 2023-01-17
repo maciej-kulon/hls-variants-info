@@ -5,7 +5,7 @@ import { HttpInputModule } from './http-input/http-input.module';
 import { VariantsHandlerModule } from './variants-handler/variants-handler.module';
 import { SegmentsHandlerModule } from './segments-handler/segments-handler.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { VmafModule } from './vmafService/vmaf.module';
+import { VmafModule } from './vmaf-service/vmaf.module';
 
 @Module({
   imports: [

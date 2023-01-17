@@ -7,6 +7,10 @@ export const VariantInfoSchema = new mongoose.Schema({
     type: String,
   },
   codecs: String,
+  resolution: new mongoose.Schema({
+    width: Number,
+    height: Number,
+  }),
   declaredMaxBitrate: Number,
   declaredAvgBitrate: Number,
   measuredMaxBitrate: Number,
@@ -17,9 +21,14 @@ export const VariantInfoSchema = new mongoose.Schema({
   segments: [SegmentInfoSchema],
 });
 
+export interface Resolution {
+  width: number;
+  height: number;
+}
 export interface VariantInfoModel {
   uri: string;
   codecs: string;
+  resolution: Resolution;
   declaredMaxBitrate: number;
   declaredAvgBitrate: number;
   measuredMaxBitrate?: number;
