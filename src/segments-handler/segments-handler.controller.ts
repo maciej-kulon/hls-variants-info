@@ -1,5 +1,11 @@
 import { Controller } from '@nestjs/common';
-import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
+import {
+  ExtendedMessage,
+  RMQMessage,
+  RMQRoute,
+  RMQService,
+  RMQTransform,
+} from 'nestjs-rmq';
 import { StringUtils } from '../utils/string-utils';
 import {
   RMQTopic,
@@ -32,6 +38,7 @@ export class SegmentsHandlerController {
           segmentUrl,
           mediaPlaylistUrl: variantInfo.playlist.uri,
         },
+        { priority: 7 },
       );
     }
   }
@@ -65,6 +72,7 @@ export class SegmentsHandlerController {
       await this.rmqService.notify<string>(
         RMQTopic.SegmentsFfprobeCompleted,
         segmentTransport.mediaPlaylistUrl,
+        { priority: 8 },
       );
     }
   }

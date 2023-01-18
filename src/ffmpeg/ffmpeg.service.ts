@@ -22,6 +22,7 @@ export class FFmpegService {
           cmd,
           (_) => {
             const data = fs.readFileSync(filePath).toString();
+            console.log(`VMAF finished for asset: ${distorted}`);
             fs.unlinkSync(filePath);
             resolve({
               identifier: distorted,
@@ -46,7 +47,9 @@ export class FFmpegService {
               original.fps
             }[original]; [dist][original]libvmaf=log_fmt=json${
               enablePhoneModel ? ':phone_model=1' : ''
-            }:log_path=${filePath}:model_path=${modelPath}`,
+            }:log_path=${filePath}${
+              process.env.RUNS_IN_CONTAINER ? `:model_path=${modelPath}` : ''
+            }`,
           )
           .format('null')
           .save('-');
@@ -66,9 +69,9 @@ export class FFmpegService {
       console.log(error);
       errorHandler(error);
     });
-    ffmpeg.on('progress', ({ percent }) => {
-      console.log(`${Math.round(percent)}%`);
-    });
+    // ffmpeg.on('progress', ({ percent }) => {
+    //   console.log(`${Math.round(percent)}%`);
+    // });
     ffmpeg.on('end', callback);
     ffmpeg.on('start', console.log);
     ffmpeg.on('stderr', console.log);

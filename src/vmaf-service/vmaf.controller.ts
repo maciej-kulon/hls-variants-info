@@ -17,6 +17,7 @@ export class VmafController {
     await this.rmqService.notify<VmafResult>(
       RMQTopic.VariantVmafCompleted,
       vmaf,
+      { priority: 3 },
     );
   }
 }

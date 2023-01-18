@@ -31,6 +31,7 @@ export class ManifestUrlHandlerController {
       await this.rmqService.notify<VariantDataTransport>(
         RMQTopic.HlsManifestParsed,
         { variant, masterPlaylistUri: masterPlaylist.uri },
+        { priority: 5 },
       );
 
       if (inputData.originalVideoUrl) {
@@ -45,6 +46,7 @@ export class ManifestUrlHandlerController {
             vmafModel: inputData.vmafModel,
             enablePhoneModel: inputData.enablePhoneModel,
           },
+          { priority: 2 },
         );
       }
     });

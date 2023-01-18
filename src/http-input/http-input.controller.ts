@@ -32,6 +32,7 @@ export class HttpInputController {
         vmafModel,
         enablePhoneModel,
       },
+      { priority: 4 },
     );
 
     res.status(202).send();

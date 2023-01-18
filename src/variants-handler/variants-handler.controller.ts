@@ -29,6 +29,7 @@ export class VariantsHandlerController {
     await this.rmqService.notify<VariantInfo>(
       RMQTopic.VariantDataCreated,
       variantInfo,
+      { priority: 6 },
     );
   }
 

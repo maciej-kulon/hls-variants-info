@@ -56,14 +56,13 @@ export type VmafInputDataTransport = {
 };
 
 export enum RMQTopic {
-  HlsManifestUrlReceived = 'hls.manifest.url.received',
-  HlsManifestParsed = 'hls.manifest.parsed',
-  VariantDataCreated = 'variant.data.created',
-  SegmentReadyToProbe = 'segment.ready.to.probe',
-  SegmentsFfprobeCompleted = 'segments.ffprobe.finished',
-  SegmentHasBeenAdded = 'segment.has.been.added',
-  VmafInputDataReceived = 'vmaf.input.data.received',
-  VariantVmafCompleted = 'variant.vmaf.completed',
+  HlsManifestUrlReceived = 'hls.manifest.url.received', // Priority 4
+  HlsManifestParsed = 'hls.manifest.parsed', // Priority 5
+  VariantDataCreated = 'variant.data.created', // Priority 6
+  SegmentReadyToProbe = 'segment.ready.to.probe', // Priority 7
+  SegmentsFfprobeCompleted = 'segments.ffprobe.finished', // Priority 8
+  VmafInputDataReceived = 'vmaf.input.data.received', // Priority 2
+  VariantVmafCompleted = 'variant.vmaf.completed', // Priority 3
 }
 
 export type VmafResult = {

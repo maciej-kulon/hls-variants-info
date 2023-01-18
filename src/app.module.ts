@@ -21,6 +21,9 @@ import { VmafModule } from './vmaf-service/vmaf.module';
       serviceName: 'hls-variants-info',
       exchangeName: 'hls-exchange',
       prefetchCount: 30,
+      queueOptions: {
+        maxPriority: 9,
+      },
       connections: [
         {
           login: 'rabbitmq',
