@@ -78,7 +78,7 @@ Under the segments array some additional data is provided such as min, max and a
 
 Passing `x-original-video-url` will result in additional field **`vmafScore`** in each stream variant document.
 
-## This project was built on top of other awesome opensource projects
+## This project was built using other awesome opensource projects
 
 Such as:
 
