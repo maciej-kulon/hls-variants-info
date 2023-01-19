@@ -60,7 +60,7 @@ To perform VMAF assessment on your stream variants, send additional header along
 
 `x-vmaf-model` - Override model which will be used for VMAF calculations. VMAF model has to be whole path, not just the file name. Default model is set to `/usr/local/share/model/vmaf_v0.6.1.json`. Available models can be obtained by sending **GET** `http://localhost:3000/vmaf-models`- it will return array of paths to available VMAF models.
 
-`x-enable-phone-model` - According to VMAF documentation, **DEFAULT** VMAF model can be switched to calculate VMAF score as it was being played on a cellphone display. This header accepts should be **true** if you wanna use phone model. Otherwise just don't send this header since it's false by default.
+`x-enable-phone-model` - According to VMAF documentation, **DEFAULT** VMAF model can be switched to calculate VMAF score as it was being played on a cellphone display. This header should be **true** if you wanna use phone model. Otherwise just don't send this header since it's false by default.
 
 ## Browsing results
 
