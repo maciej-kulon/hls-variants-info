@@ -30,15 +30,16 @@
     ```zsh
     npm install && npm run docker
     ```
-    <span style="color:yellow" >PLEASE NOTICE</span>: Building docker image for the first time may take up to an hour or even longer, depending on your hardware. FFmpeg with lots of enabled libraries and VMAF are compiled from source during docker build process.
+    <a style="color:yellow" >PLEASE NOTICE</a>: Building docker image for the first time may take up to an hour or even longer, depending on your hardware. FFmpeg with lots of enabled libraries and VMAF are compiled from source during docker build process.
 
 ## Usage
 
-If `npm run docker` command completed successfully, tool is ready to be used.
+If `npm run docker` command has completed successfully, tool is ready to be used.
+
 
 ## Segments bitrates measurement
 
-To measure segments bitrate values, min, max and average, HTTP request has to be send to <http://localhost:3000> on `hls-manifest` endpoint with `x-manifest-url` header pointing to HLS **MasterPlaylist** file.
+To measure segments bitrate values, min, max and average, HTTP request has to be send to `http://localhost:3000/hls-manifest` endpoint with `x-manifest-url` header pointing to HLS **MasterPlaylist** file.
 
 ```zsh
 curl  -X POST http://localhost:3000/hls-manifest \
@@ -51,7 +52,15 @@ curl  -X POST http://localhost:3000/hls-manifest \
 </p>
 
 
-To perform VMAF assessment on your stream variants, send additional header: `x-original-video-url` pointing to original video file from which HLS **MasterPlaylist** has been created. Application take care of input data normalization. If distorted video (I assume it's HLS manifest) has different resolution or frame rate, app will scale distorted video to match the original video resolution. Frame rate will be set to a lower value, so if original video for some reason has lower framerate, then distorted video framerate will be decreased to match original one and the other way around.
+To perform VMAF assessment on your stream variants, send additional header along with the one from the example above: `x-original-video-url` pointing to original video file from which HLS **MasterPlaylist** has been created. Application take care of input data normalization. If distorted video (I assume it's HLS manifest) has different resolution or frame rate, app will scale distorted video to match the original video resolution. Frame rate will be set to a lower value, so if original video for some reason has lower framerate, then distorted video framerate will be decreased to match original one and the other way around.
+
+### **Additional headers**:
+
+`x-tag` - Add additional tag into the main document in MongoDB.
+
+`x-vmaf-model` - Override model which will be used for VMAF calculations. VMAF model has to be whole path, not just the file name. Default model is set to `/usr/local/share/model/vmaf_v0.6.1.json`. Available models can be obtained by sending **GET** `http://localhost:3000/vmaf-models`- it will return array of paths to available VMAF models.
+
+`x-enable-phone-model` - According to VMAF documentation, **DEFAULT** VMAF model can be switched to calculate VMAF score as it was being played on a cellphone display. This header accepts should be **true** if you wanna use phone model. Otherwise just don't send this header since it's false by default.
 
 ## Browsing results
 
