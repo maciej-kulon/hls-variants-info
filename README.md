@@ -25,12 +25,24 @@
     cd ~/Documents/repos/hls-variants-info
     ```
 
-3. Run command
+3. Install dependencies
 
     ```zsh
-    npm install && npm run docker
+    npm install
     ```
     <a style="color:yellow" >PLEASE NOTICE</a>: Building docker image for the first time may take up to an hour or even longer, depending on your hardware. FFmpeg with lots of enabled libraries and VMAF are compiled from source during docker build process.
+
+4. Build docker image
+
+    ```zsh
+    docker compose build
+    ```
+
+5. Run docker container
+
+    ```zsh
+    docker compose up
+    ```
 
 ## Usage
 

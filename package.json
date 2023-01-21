@@ -6,7 +6,6 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "docker": "docker compose build && docker compose up",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -31,12 +30,10 @@
     "glob": "^8.1.0",
     "got": "^11.8.5",
     "hls-parser": "^0.10.4",
-    "i": "^0.3.7",
     "mongoose": "^6.8.3",
     "nestjs-rmq": "^2.8.0",
     "npm": "^9.2.0",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
