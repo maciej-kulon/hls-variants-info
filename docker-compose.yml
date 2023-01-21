@@ -38,6 +38,10 @@ services:
       - RABBIT_HOSTNAME=hls-variants-broker
       - RUNS_IN_CONTAINER=true
     build: .
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
     ports:
       - '3000:3000'
     depends_on:
