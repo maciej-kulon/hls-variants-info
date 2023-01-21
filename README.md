@@ -68,11 +68,11 @@ To perform VMAF assessment on your stream variants, send additional header along
 
 ### **Additional headers**:
 
-`x-tag` - Add additional tag into the main document in MongoDB.
+`x-tag` - Tag main document in MongoDB with a string.
 
 `x-vmaf-model` - Override model which will be used for VMAF calculations. VMAF model has to be whole path, not just the file name. Default model is set to `/usr/local/share/model/vmaf_v0.6.1.json`. Available models can be obtained by sending **GET** `http://localhost:3000/vmaf-models`- it will return array of paths to available VMAF models.
 
-`x-enable-phone-model` - According to VMAF documentation, **DEFAULT** VMAF model can be switched to calculate VMAF score as it was being played on a cellphone display. This header accepts should be **true** if you wanna use phone model. Otherwise just don't send this header since it's false by default.
+`x-enable-phone-model` - According to VMAF documentation, a default VMAF model can be switched to calculate VMAF scores as video was being played on a cellphone display. This header should be **true** if you wanna use a phone model. Otherwise just don't send this header since it's false by default
 
 ## Browsing results
 
@@ -90,7 +90,7 @@ Under the segments array some additional data is provided such as min, max and a
 
 Passing `x-original-video-url` will result in additional field **`vmafScore`** in each stream variant document.
 
-## This project was built on top of other awesome opensource projects
+## This project was built using other awesome opensource projects
 
 Such as:
 
