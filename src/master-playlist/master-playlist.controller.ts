@@ -3,17 +3,17 @@ import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
 import {
   InputDTO,
   RMQTopic,
-  VariantDTO,
   VmafInputDTO,
-} from 'src/types/types';
+} from 'src/rqm/topics';
 import { StringUtils } from 'src/utils/string-utils';
+import { VariantDTO } from 'src/variant/variant.types';
 import { Dao } from '../mongo/dao/dao.service';
-import { ManifestUrlHandlerService } from './manifest-url-handler.service';
+import { MasterPlaylistService } from './master-playlist.service';
 
 @Controller()
-export class ManifestUrlHandlerController {
+export class MasterPlaylistController {
   public constructor(
-    private readonly manifestUrlHandler: ManifestUrlHandlerService,
+    private readonly masterPlaylistService: MasterPlaylistService,
     private readonly rmqService: RMQService,
     private readonly dao: Dao,
   ) { }
@@ -21,7 +21,7 @@ export class ManifestUrlHandlerController {
   @RMQTransform()
   @RMQRoute(RMQTopic.HlsManifestUrlReceived)
   public async handleManifestUrl(inputData: InputDTO) {
-    const masterPlaylist = await this.manifestUrlHandler.createMasterPlaylist(
+    const masterPlaylist = await this.masterPlaylistService.createMasterPlaylist(
       inputData.hlsManifestUrl,
     );
 

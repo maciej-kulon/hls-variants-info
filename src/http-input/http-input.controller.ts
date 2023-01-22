@@ -1,8 +1,9 @@
 import { Controller, Get, Headers, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { RMQService } from 'nestjs-rmq';
-import { InputDTO, RMQTopic } from 'src/types/types';
+import { RMQTopic } from 'src/rqm/topics';
 import { glob } from 'glob';
+import { InputDTO } from 'src/master-playlist/master-playlist.types';
 
 @Controller()
 export class HttpInputController {

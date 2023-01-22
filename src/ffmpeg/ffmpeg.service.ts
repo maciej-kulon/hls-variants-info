@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as ffmpeg from 'fluent-ffmpeg';
 import * as fs from 'fs';
-import { OriginalVideoData, VmafLog, VmafResult } from '../types/types';
+import { OriginalVideoData, VmafLog, VmafResult } from 'src/vmaf-service/vmaf.dto';
 
 @Injectable()
 export class FFmpegService {

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { parse, types } from 'hls-parser';
-import { BitrateAggregation, VariantInfo } from '../types/types';
 import { HttpClientService } from '../http-client/http-client.service';
 import { StringUtils } from '../utils/string-utils';
 import { FFprobeService } from 'src/ffprobe/ffprobe.service';
-import { SegmentInfo } from 'src/segments-handler/segments.dto';
+import { Segment } from 'src/segment/segment.schema';
+import { BitrateAggregation, VariantInfo } from './variant.types';
 
 @Injectable()
-export class VariantsHandlerService {
+export class VariantService {
   public constructor(
     private readonly httpClient: HttpClientService,
     private readonly ffprobeService: FFprobeService,
@@ -49,7 +49,7 @@ export class VariantsHandlerService {
   }
 
   public async aggregateBitrateValues(
-    segments: SegmentInfo[],
+    segments: Segment[],
   ): Promise<BitrateAggregation> {
     return new Promise((resolve, reject) => {
       try {

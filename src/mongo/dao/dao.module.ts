@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MasterPlaylist, MasterPlaylistSchema } from '../master-playlist/master-playlist.schema';
+import { MasterPlaylist, MasterPlaylistSchema } from '../../master-playlist/master-playlist.schema';
 import { Dao } from './dao.service';
 
 @Module({

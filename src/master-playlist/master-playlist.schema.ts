@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import {
   Variant,
-} from '../media-playlist/variant-info.schema';
+} from '../variant/variant.schema';
 
 @Schema({
   collection: "masterplaylists",

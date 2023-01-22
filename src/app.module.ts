@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { RMQModule } from 'nestjs-rmq';
-import { ManifestUrlHandlerModule } from './manifest-url-handler/manifest-url-handler.module';
+import { MasterPlaylistModule } from './master-playlist/master-playlist.module';
 import { HttpInputModule } from './http-input/http-input.module';
-import { VariantsHandlerModule } from './variants-handler/variants-handler.module';
-import { SegmentsHandlerModule } from './segments-handler/segments-handler.module';
+import { VariantModule } from './variant/variant.module';
+import { SegmentModule } from './segment/segment.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { VmafModule } from './vmaf-service/vmaf.module';
 
 @Module({
   imports: [
     HttpInputModule,
-    ManifestUrlHandlerModule,
-    VariantsHandlerModule,
-    SegmentsHandlerModule,
+    MasterPlaylistModule,
+    VariantModule,
+    SegmentModule,
     VmafModule,
     MongooseModule.forRoot(
       `mongodb://root:root@${process.env.MONGO_HOSTNAME}:27017/hls-variants-info?tls=false&ssl=false&authSource=admin`,
@@ -35,4 +35,4 @@ import { VmafModule } from './vmaf-service/vmaf.module';
     }),
   ],
 })
-export class AppModule {}
+export class AppModule { }

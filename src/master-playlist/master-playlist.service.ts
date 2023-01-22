@@ -7,8 +7,8 @@ export type VariantData = {
 };
 
 @Injectable()
-export class ManifestUrlHandlerService {
-  public constructor(private readonly httpClient: HttpClientService) {}
+export class MasterPlaylistService {
+  public constructor(private readonly httpClient: HttpClientService) { }
 
   public async createMasterPlaylist(
     manifestUrl: string,

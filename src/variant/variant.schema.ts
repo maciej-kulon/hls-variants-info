@@ -1,6 +1,6 @@
 import { Prop, Schema } from '@nestjs/mongoose';
-import { VmafPooledMetrics } from 'src/types/types';
-import { Segment } from '../segments/segment.schema';
+import { VmafPooledMetrics } from 'src/vmaf-service/vmaf.dto';
+import { Segment } from '../segment/segment.schema';
 
 export interface Resolution {
   width: number;

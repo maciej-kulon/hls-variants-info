@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MasterPlaylist } from '../master-playlist/master-playlist.schema';
-import {
-  BitrateAggregation,
-  InputDTO,
-  VariantInfo,
-  VmafResult,
-} from '../../types/types';
-import { SegmentInfo } from 'src/segments-handler/segments.dto';
+import { MasterPlaylist } from '../../master-playlist/master-playlist.schema';
+import { Segment } from '../../segment/segment.schema';
+import { BitrateAggregation, VariantInfo } from 'src/variant/variant.types';
+import { VmafResult } from 'src/vmaf-service/vmaf.dto';
+import { InputDTO } from 'src/master-playlist/master-playlist.types';
 
 @Injectable()
 export class Dao {
@@ -49,7 +46,7 @@ export class Dao {
     );
   }
 
-  public async addSegment(variantUri: string, segment: SegmentInfo) {
+  public async addSegment(variantUri: string, segment: Segment) {
     await this.model.findOneAndUpdate(
       {
         'variants.uri': variantUri,
@@ -99,7 +96,7 @@ export class Dao {
 
   public async getAllVariantSegments(
     variantUri: string,
-  ): Promise<SegmentInfo[]> {
+  ): Promise<Segment[]> {
     const masterPlaylist = await this.getMasterPlaylistByVariantUri(variantUri);
     const variant = masterPlaylist.variants.find(
       (item) => item.uri === variantUri,

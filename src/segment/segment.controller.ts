@@ -7,16 +7,17 @@ import {
 import { StringUtils } from '../utils/string-utils';
 import {
   RMQTopic,
-  VariantInfo,
-} from '../types/types';
-import { SegmentsHandlerService } from './segments-handler.service';
+} from '../rqm/topics';
+import { SegmentService } from './segment.service';
 import { Dao } from '../mongo/dao/dao.service';
-import { SegmentDTO, SegmentInfo } from './segments.dto';
+import { SegmentDTO } from './segment.types';
+import { Segment } from 'src/segment/segment.schema';
+import { VariantInfo } from 'src/variant/variant.types';
 
 @Controller()
-export class SegmentsHandlerController {
+export class SegmentController {
   public constructor(
-    private readonly segmentsHandler: SegmentsHandlerService,
+    private readonly segmentService: SegmentService,
     private readonly dao: Dao,
     private readonly rmqService: RMQService,
   ) { }
@@ -42,9 +43,9 @@ export class SegmentsHandlerController {
   @RMQTransform()
   @RMQRoute(RMQTopic.SegmentReadyToProbe)
   public async handleSegmentFfprobe(segmentTransport: SegmentDTO) {
-    let segmentInfo: SegmentInfo;
+    let segmentInfo: Segment;
     try {
-      segmentInfo = await this.segmentsHandler.ffprobeSegment(
+      segmentInfo = await this.segmentService.ffprobeSegment(
         segmentTransport.segmentUrl,
       );
     } catch (error) {
@@ -60,7 +61,7 @@ export class SegmentsHandlerController {
     await this.dao.addSegment(segmentTransport.mediaPlaylistUrl, segmentInfo);
 
     const lastSegmentHasBeenAdded =
-      await this.segmentsHandler.checkIfAllSegmentsHadBeenAdded(
+      await this.segmentService.checkIfAllSegmentsHadBeenAdded(
         segmentTransport.mediaPlaylistUrl,
       );
 

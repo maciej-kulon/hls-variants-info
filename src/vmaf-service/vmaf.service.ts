@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FFmpegService } from 'src/ffmpeg/ffmpeg.service';
 import { FFprobeService } from 'src/ffprobe/ffprobe.service';
-import { VmafInputDTO } from 'src/types/types';
+import { VmafInputDTO } from './vmaf.dto';
 
 @Injectable()
 export class VmafService {
