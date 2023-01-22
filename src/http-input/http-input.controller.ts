@@ -1,13 +1,12 @@
 import { Controller, Get, Headers, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { RMQService } from 'nestjs-rmq';
-import { InputDataTransport, RMQTopic } from 'src/types/types';
-import * as fs from 'fs';
+import { InputDTO, RMQTopic } from 'src/types/types';
 import { glob } from 'glob';
 
 @Controller()
 export class HttpInputController {
-  public constructor(private readonly rmqService: RMQService) {}
+  public constructor(private readonly rmqService: RMQService) { }
 
   @Post('/hls-manifest')
   public async analyzeManifest(
@@ -23,7 +22,7 @@ export class HttpInputController {
       return;
     }
 
-    await this.rmqService.notify<InputDataTransport>(
+    await this.rmqService.notify<InputDTO>(
       RMQTopic.HlsManifestUrlReceived,
       {
         hlsManifestUrl,

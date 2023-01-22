@@ -4,7 +4,7 @@ import { Dao } from '../mongo/dao/dao.service';
 import {
   RMQTopic,
   VariantInfo,
-  VariantDataTransport,
+  VariantDTO,
   VmafResult,
 } from '../types/types';
 import { VariantsHandlerService } from './variants-handler.service';
@@ -15,10 +15,10 @@ export class VariantsHandlerController {
     private readonly variantsHandlerService: VariantsHandlerService,
     private readonly dao: Dao,
     private readonly rmqService: RMQService,
-  ) {}
+  ) { }
   @RMQTransform()
   @RMQRoute(RMQTopic.HlsManifestParsed)
-  public async handleVariants(variantTransport: VariantDataTransport) {
+  public async handleVariants(variantTransport: VariantDTO) {
     const variantInfo = await this.variantsHandlerService.createVariantInfo(
       variantTransport.variant,
       variantTransport.masterPlaylistUri,

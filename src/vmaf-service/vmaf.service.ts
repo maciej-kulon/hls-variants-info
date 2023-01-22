@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { FFmpegService } from 'src/ffmpeg/ffmpeg.service';
 import { FFprobeService } from 'src/ffprobe/ffprobe.service';
-import { VmafInputDataTransport } from 'src/types/types';
+import { VmafInputDTO } from 'src/types/types';
 
 @Injectable()
 export class VmafService {
   public constructor(
     private readonly ffprobeService: FFprobeService,
     private readonly ffmpegService: FFmpegService,
-  ) {}
-  public async computeVmaf(vmafInputData: VmafInputDataTransport) {
+  ) { }
+  public async computeVmaf(vmafInputData: VmafInputDTO) {
     const originalVideoData = await this.ffprobeService.getFprobeData(
       vmafInputData.originalVideoUrl,
     );
@@ -26,7 +26,7 @@ export class VmafService {
       this.ffprobeService.getFPS(distortedVideoData),
     );
 
-    return await this.ffmpegService.vmaf(
+    return await this.ffmpegService.calculateVmaf(
       vmafInputData.variantUri,
       {
         source: vmafInputData.originalVideoUrl,

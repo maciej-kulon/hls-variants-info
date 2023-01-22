@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { parse, types } from 'hls-parser';
-import { BitrateAggregation, SegmentInfo, VariantInfo } from '../types/types';
+import { BitrateAggregation, VariantInfo } from '../types/types';
 import { HttpClientService } from '../http-client/http-client.service';
 import { StringUtils } from '../utils/string-utils';
 import { FFprobeService } from 'src/ffprobe/ffprobe.service';
+import { SegmentInfo } from 'src/segments-handler/segments.dto';
 
 @Injectable()
 export class VariantsHandlerService {
   public constructor(
     private readonly httpClient: HttpClientService,
     private readonly ffprobeService: FFprobeService,
-  ) {}
+  ) { }
 
   public async createVariantInfo(
     variant: types.Variant,

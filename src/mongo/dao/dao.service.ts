@@ -1,62 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Document, Model } from 'mongoose';
-import { MasterPlaylistModel } from '../master-playlist/master-playlist.model';
+import { Model } from 'mongoose';
+import { MasterPlaylist } from '../master-playlist/master-playlist.schema';
 import {
   BitrateAggregation,
-  InputDataTransport,
-  SegmentInfo,
+  InputDTO,
   VariantInfo,
   VmafResult,
 } from '../../types/types';
+import { SegmentInfo } from 'src/segments-handler/segments.dto';
 
 @Injectable()
 export class Dao {
   public constructor(
-    @InjectModel('MasterPlaylist')
-    private readonly masterPlaylistModel: Model<MasterPlaylistModel>,
-  ) {}
-  public async saveMasterPlaylist(inputData: InputDataTransport) {
-    try {
-      let masterPlaylist = await this.getMasterPlaylistByUri(
-        inputData.hlsManifestUrl,
-      );
-
-      if (!masterPlaylist) {
-        masterPlaylist = new this.masterPlaylistModel({
-          uri: inputData.hlsManifestUrl,
-          tag: inputData.tag,
-          variants: [],
-        });
-      } else {
-        masterPlaylist.variants = [];
-      }
-
-      await masterPlaylist.save();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    @InjectModel(MasterPlaylist.name)
+    private readonly model: Model<MasterPlaylist>,
+  ) { }
+  public async saveMasterPlaylist(inputData: InputDTO) {
+    await this.model.findOneAndReplace(
+      { uri: inputData.hlsManifestUrl },
+      {
+        uri: inputData.hlsManifestUrl,
+        variants: [],
+        vmafModelPath: inputData.vmafModel,
+        tag: inputData.tag,
+        originalVideoFile: inputData.originalVideoUrl,
+      },
+      { new: true, upsert: true },
+    );
   }
 
   public async addVariant(variantInfo: VariantInfo) {
-    const masterPlaylist = await this.getMasterPlaylistByUri(
-      variantInfo.masterPlaylistUri,
+    await this.model.findOneAndUpdate(
+      { uri: variantInfo.masterPlaylistUri },
+      {
+        $push: {
+          'variants': {
+            uri: variantInfo.playlist.uri,
+            codecs: variantInfo.codecs,
+            resolution: variantInfo.resolution,
+            declaredMaxBitrate: variantInfo.declaredMaxBitrate,
+            declaredAvgBitrate: variantInfo.declaredAvgBitrate,
+            segmentsCount: variantInfo.playlist.segments.length,
+            segments: [],
+          }
+        },
+      },
     );
-    masterPlaylist.variants.push({
-      uri: variantInfo.playlist.uri,
-      codecs: variantInfo.codecs,
-      resolution: variantInfo.resolution,
-      declaredMaxBitrate: variantInfo.declaredMaxBitrate,
-      declaredAvgBitrate: variantInfo.declaredAvgBitrate,
-      segmentsCount: variantInfo.playlist.segments.length,
-      segments: [],
-    });
-    await masterPlaylist.save();
   }
 
   public async addSegment(variantUri: string, segment: SegmentInfo) {
-    await this.masterPlaylistModel.findOneAndUpdate(
+    await this.model.findOneAndUpdate(
       {
         'variants.uri': variantUri,
       },
@@ -75,18 +69,20 @@ export class Dao {
     variantUri: string,
     data: BitrateAggregation,
   ) {
-    const masterPlaylist = await this.getMasterPlaylistByVariantUri(variantUri);
-    const variant = masterPlaylist.variants.find(
-      (item) => item.uri === variantUri,
+    await this.model.findOneAndUpdate(
+      { 'variants.uri': variantUri },
+      {
+        $set: {
+          'variants.$.measuredMaxBitrate': data.max,
+          'variants.$.measuredMinBitrate': data.min,
+          'variants.$.measuredAvgBitrate': data.average,
+        }
+      }
     );
-    variant.measuredMaxBitrate = data.max;
-    variant.measuredMinBitrate = data.min;
-    variant.measuredAvgBitrate = data.average;
-    await masterPlaylist.save();
   }
 
   public async updateVmafResult(vmaf: VmafResult) {
-    await this.masterPlaylistModel.findOneAndUpdate(
+    await this.model.findOneAndUpdate(
       {
         'variants.uri': vmaf.identifier,
       },
@@ -111,14 +107,8 @@ export class Dao {
     return variant.segments;
   }
 
-  public async getMasterPlaylistByUri(masterPlaylistUri: string) {
-    return await this.masterPlaylistModel.findOne({
-      uri: masterPlaylistUri,
-    });
-  }
-
   public async getMasterPlaylistByVariantUri(variantUri: string) {
-    return await this.masterPlaylistModel.findOne({
+    return await this.model.findOne({
       'variants.uri': variantUri,
     });
   }

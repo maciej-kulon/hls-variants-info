@@ -1,7 +1,5 @@
 import { Controller } from '@nestjs/common';
 import {
-  ExtendedMessage,
-  RMQMessage,
   RMQRoute,
   RMQService,
   RMQTransform,
@@ -9,13 +7,11 @@ import {
 import { StringUtils } from '../utils/string-utils';
 import {
   RMQTopic,
-  SegmentDataTransport,
-  SegmentInfo,
   VariantInfo,
 } from '../types/types';
 import { SegmentsHandlerService } from './segments-handler.service';
 import { Dao } from '../mongo/dao/dao.service';
-import { last } from 'rxjs';
+import { SegmentDTO, SegmentInfo } from './segments.dto';
 
 @Controller()
 export class SegmentsHandlerController {
@@ -23,7 +19,7 @@ export class SegmentsHandlerController {
     private readonly segmentsHandler: SegmentsHandlerService,
     private readonly dao: Dao,
     private readonly rmqService: RMQService,
-  ) {}
+  ) { }
   @RMQTransform()
   @RMQRoute(RMQTopic.VariantDataCreated)
   public async handleSegmentsUrls(variantInfo: VariantInfo) {
@@ -32,7 +28,7 @@ export class SegmentsHandlerController {
         variantInfo.playlist.uri,
         segment.uri,
       );
-      await this.rmqService.notify<SegmentDataTransport>(
+      await this.rmqService.notify<SegmentDTO>(
         RMQTopic.SegmentReadyToProbe,
         {
           segmentUrl,
@@ -45,15 +41,15 @@ export class SegmentsHandlerController {
 
   @RMQTransform()
   @RMQRoute(RMQTopic.SegmentReadyToProbe)
-  public async handleSegmentFfprobe(segmentTransport: SegmentDataTransport) {
+  public async handleSegmentFfprobe(segmentTransport: SegmentDTO) {
     let segmentInfo: SegmentInfo;
     try {
       segmentInfo = await this.segmentsHandler.ffprobeSegment(
         segmentTransport.segmentUrl,
       );
     } catch (error) {
-      console.log(
-        `Failed to perform ffprobe on segment: ${segmentTransport.segmentUrl}`,
+      console.error(
+        `Failed to perform ffprobe on segment: ${segmentTransport.segmentUrl}`, error,
       );
       segmentInfo = {
         uri: segmentTransport.segmentUrl,

@@ -4,4 +4,4 @@ import { HttpInputController } from './http-input.controller';
 @Module({
   controllers: [HttpInputController],
 })
-export class HttpInputModule {}
+export class HttpInputModule { }

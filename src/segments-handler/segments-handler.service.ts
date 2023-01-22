@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Dao } from '../mongo/dao/dao.service';
 import { FFprobeService } from '../ffprobe/ffprobe.service';
-import { SegmentInfo } from '../types/types';
+import { SegmentInfo } from './segments.dto';
 @Injectable()
 export class SegmentsHandlerService {
   public constructor(
     private readonly ffprobeService: FFprobeService,
     private readonly dao: Dao,
-  ) {} //TODO: DAO, DAL, REPOSITORY
+  ) { }
 
   public async ffprobeSegment(segmentUrl: string): Promise<SegmentInfo> {
     return new Promise((resolve, reject) => {

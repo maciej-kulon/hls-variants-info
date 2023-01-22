@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MasterPlaylistSchema } from '../master-playlist/master-playlist.model';
+import { MasterPlaylist, MasterPlaylistSchema } from '../master-playlist/master-playlist.schema';
 import { Dao } from './dao.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       {
-        name: 'MasterPlaylist',
+        name: MasterPlaylist.name,
         schema: MasterPlaylistSchema,
       },
     ]),
@@ -15,4 +15,4 @@ import { Dao } from './dao.service';
   providers: [Dao],
   exports: [Dao],
 })
-export class DaoModule {}
+export class DaoModule { }

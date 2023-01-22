@@ -1,5 +1,5 @@
 import { types } from 'hls-parser';
-import { Resolution } from 'src/mongo/media-playlist/variant-info.model';
+import { Resolution } from 'src/mongo/media-playlist/variant-info.schema';
 
 export type VariantInfo = {
   playlist: types.MediaPlaylist;
@@ -14,10 +14,12 @@ export type VariantInfo = {
   masterPlaylistUri: string;
 };
 
-export type SegmentInfo = {
-  uri: string;
-  bitrate: number;
+export type VariantDTO = {
+  variant: types.Variant;
+  masterPlaylistUri: string;
 };
+
+
 
 export type BitrateAggregation = {
   min: number;
@@ -25,33 +27,11 @@ export type BitrateAggregation = {
   average: number;
 };
 
-export type SegmentsFfprobeFinished = {
-  variantUri: string;
-  segments: SegmentInfo[];
-};
-
-export type VariantDataTransport = {
-  variant: types.Variant;
-  masterPlaylistUri: string;
-};
-
-export type SegmentDataTransport = {
-  segmentUrl: string;
-  mediaPlaylistUrl: string;
-};
-
-export type InputDataTransport = {
+export type InputDTO = {
   hlsManifestUrl: string;
   originalVideoUrl?: string;
   vmafModel?: string;
   tag?: string;
-  enablePhoneModel?: boolean;
-};
-
-export type VmafInputDataTransport = {
-  variantUri: string;
-  originalVideoUrl: string;
-  vmafModel?: string;
   enablePhoneModel?: boolean;
 };
 
@@ -64,6 +44,13 @@ export enum RMQTopic {
   VmafInputDataReceived = 'vmaf.input.data.received', // Priority 2
   VariantVmafCompleted = 'variant.vmaf.completed', // Priority 3
 }
+
+export type VmafInputDTO = {
+  variantUri: string;
+  originalVideoUrl: string;
+  vmafModel?: string;
+  enablePhoneModel?: boolean;
+};
 
 export type VmafResult = {
   originalVideoFile: string;
