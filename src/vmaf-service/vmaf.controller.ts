@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
-import { RMQTopic, VmafInputDTO, VmafResult } from '../rqm/topics';
+import { RMQTopic } from '../rqm/topics';
+import { VmafInputDTO, VmafResult } from './vmaf.dto';
 import { VmafService } from './vmaf.service';
 
 @Controller()

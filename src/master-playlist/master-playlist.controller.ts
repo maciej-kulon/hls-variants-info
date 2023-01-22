@@ -1,14 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { RMQRoute, RMQService, RMQTransform } from 'nestjs-rmq';
 import {
-  InputDTO,
   RMQTopic,
-  VmafInputDTO,
 } from 'src/rqm/topics';
 import { StringUtils } from 'src/utils/string-utils';
 import { VariantDTO } from 'src/variant/variant.types';
+import { VmafInputDTO } from 'src/vmaf-service/vmaf.dto';
 import { Dao } from '../mongo/dao/dao.service';
 import { MasterPlaylistService } from './master-playlist.service';
+import { InputDTO } from './master-playlist.types';
 
 @Controller()
 export class MasterPlaylistController {
