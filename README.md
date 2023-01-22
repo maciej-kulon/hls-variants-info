@@ -36,7 +36,7 @@
     ```zsh
     docker compose build
     ```
-<a style="color:yellow" >PLEASE NOTICE</a>: Building docker image for the first time may take up to an hour or even longer - 5 hours on M1/M2 Mac, depending on your hardware. FFmpeg with lots of enabled libraries and VMAF are compiled from source during docker build process.
+<a style="color:yellow" >PLEASE NOTICE</a>: Building docker image for the first time may take up to an hour or even longer - 5 hours on M1/M2 Mac. FFmpeg with lots of enabled libraries and VMAF are compiled from source during docker build process.
 
 5. Run docker container
 
