@@ -1,7 +1,17 @@
 name: Push to feature
+workflow_dispatch:
 on: [push]
 jobs:
   runs-on: ubuntu-latest
   steps:
-    uses: actions/checkout@v3
-    run: npm test
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install node
+    uses: actions/setup-node@v3
+        with:
+          node-version: 18.x.x
+          cache: npm
+    
+    - name: Run tests
+    run: npm run test
