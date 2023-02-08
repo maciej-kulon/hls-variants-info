@@ -1,0 +1,6 @@
+name: Push to feature
+on: [push]
+jobs:
+  runs-on: ubuntu-latest
+  uses: actions/checkout@v3
+  run: npm test
