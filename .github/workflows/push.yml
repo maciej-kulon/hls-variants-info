@@ -12,9 +12,6 @@ jobs:
         with:
           node-version: 18.x.x
           cache: npm
-      
-      - name: Install dependencies
-        run: npm install && npm i -g mocha ts-node
 
       - name: Run tests
-        run: npm run test
+        run: npm ci && npm run test
